@@ -162,7 +162,7 @@
 </nav>
 
 <!-- Mobile Menu Dropdown -->
-<div id="mobile-menu" class="absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-white/10 z-40 hidden flex-col py-8 px-gutter gap-4 md:hidden opacity-0 transition-opacity duration-300 shadow-2xl">
+<div id="mobile-menu" class="absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-white/10 z-[60] hidden md:hidden flex flex-col py-8 px-gutter gap-4 opacity-0 pointer-events-none transition-opacity duration-300 shadow-2xl" aria-hidden="true">
     <a href="#" class="w-full text-center py-3 rounded-xl border border-white/10 bg-surface-container/50 text-white font-body-md text-base hover:bg-white/10 transition-colors mobile-link">Inicio</a>
     <a href="#expertise" class="w-full text-center py-3 rounded-xl border border-white/10 bg-surface-container/50 text-white font-body-md text-base hover:bg-white/10 transition-colors mobile-link">Expertise</a>
     <a href="#puente" class="w-full text-center py-3 rounded-xl border border-white/10 bg-surface-container/50 text-white font-body-md text-base hover:bg-white/10 transition-colors mobile-link">Perfil</a>
@@ -756,25 +756,32 @@ Acompaño organizaciones y líderes, en Inteligencia Artificial &amp; Datos apli
     const mobileLinks = document.querySelectorAll('.mobile-link');
     
     if(mobileBtn && mobileMenu) {
-        const toggleMenu = () => {
-            const isHidden = mobileMenu.classList.contains('hidden');
-            if(isHidden) {
-                mobileMenu.classList.remove('hidden');
-                setTimeout(() => mobileMenu.classList.remove('opacity-0'), 10);
-                mobileIcon.textContent = 'close';
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileMenu.classList.add('opacity-0');
-                setTimeout(() => {
-                    mobileMenu.classList.add('hidden');
-                    mobileIcon.textContent = 'menu';
-                    document.body.style.overflow = '';
-                }, 300);
-            }
+        const openMenu = () => {
+            mobileMenu.classList.remove('hidden', 'pointer-events-none');
+            mobileMenu.setAttribute('aria-hidden', 'false');
+            mobileBtn.setAttribute('aria-expanded', 'true');
+            requestAnimationFrame(() => mobileMenu.classList.remove('opacity-0'));
+            mobileIcon.textContent = 'close';
+            document.body.style.overflow = 'hidden';
         };
-        
+        const closeMenu = () => {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+                mobileIcon.textContent = 'menu';
+                document.body.style.overflow = '';
+            }, 300);
+        };
+        const toggleMenu = () => {
+            mobileMenu.classList.contains('hidden') ? openMenu() : closeMenu();
+        };
+
+        mobileBtn.setAttribute('aria-expanded', 'false');
+        mobileBtn.setAttribute('aria-controls', 'mobile-menu');
         mobileBtn.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
     }
   });
 </script>
