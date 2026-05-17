@@ -156,10 +156,19 @@
 <a href="#media" class="hover:text-white transition-colors">Prensa & Media</a>
 </div>
 <a class="hidden md:flex items-center justify-center px-6 py-2 rounded-full border border-primary/30 bg-background/50 text-white font-body-md text-sm hover:bg-primary-container hover:border-primary-container transition-all duration-300" href="#consultancy">¿Trabajamos juntos?</a>
-<button class="md:hidden text-on-surface-variant">
-<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<button id="mobile-menu-btn" class="md:hidden text-on-surface-variant hover:text-white transition-colors z-50 relative">
+<span id="mobile-menu-icon" class="material-symbols-outlined text-3xl" data-icon="menu">menu</span>
 </button>
 </nav>
+
+<!-- Mobile Menu Dropdown -->
+<div id="mobile-menu" class="absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-white/10 z-40 hidden flex-col py-6 px-gutter gap-4 md:hidden opacity-0 transition-opacity duration-300 shadow-2xl">
+    <a href="#" class="font-body-md text-base text-on-surface-variant hover:text-white transition-colors mobile-link py-2 border-b border-white/5">Inicio</a>
+    <a href="#expertise" class="font-body-md text-base text-on-surface-variant hover:text-white transition-colors mobile-link py-2 border-b border-white/5">Expertise</a>
+    <a href="#puente" class="font-body-md text-base text-on-surface-variant hover:text-white transition-colors mobile-link py-2 border-b border-white/5">Perfil</a>
+    <a href="#media" class="font-body-md text-base text-on-surface-variant hover:text-white transition-colors mobile-link py-2 border-b border-white/5">Prensa & Media</a>
+    <a href="#consultancy" class="mt-4 w-full text-center py-3 rounded-full border border-primary/30 bg-primary/10 text-white font-label-caps text-xs tracking-widest hover:bg-primary transition-all duration-300 mobile-link">¿TRABAJAMOS JUNTOS?</a>
+</div>
 </header>
 <main class="pt-24">
 <!-- Hero Section -->
@@ -739,6 +748,34 @@ Acompaño organizaciones y líderes, en Inteligencia Artificial &amp; Datos apli
         el.classList.add('reveal');
         observer.observe(el);
     });
+
+    // Mobile Menu Toggle logic
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileIcon = document.getElementById('mobile-menu-icon');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    
+    if(mobileBtn && mobileMenu) {
+        const toggleMenu = () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if(isHidden) {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => mobileMenu.classList.remove('opacity-0'), 10);
+                mobileIcon.textContent = 'close';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.add('opacity-0');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                    mobileIcon.textContent = 'menu';
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+        };
+        
+        mobileBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+    }
   });
 </script>
 </body></html>
